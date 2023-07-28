@@ -3,6 +3,9 @@ package hotels.accommodation.controller
 import hotels.accommodation.dto.ItemDto
 import hotels.accommodation.model.ItemModel
 import hotels.accommodation.service.ItemService
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.CachePut
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -25,6 +28,7 @@ class ItemController(private val itemService: ItemService) {
 
 
     @GetMapping("/items")
+    @CachePut("items")
     fun getAllItems(
         @RequestParam(required = false) rating: Int?,
         @RequestParam(required = false) city: String?,
@@ -36,21 +40,25 @@ class ItemController(private val itemService: ItemService) {
     }
 
     @GetMapping("/item/{id}")
+    @CachePut("items")
     fun getItemById(@PathVariable id: Long): ResponseEntity<ItemDto> {
         return ResponseEntity.status(HttpStatus.OK).body(itemService.getItem(id));
     }
 
     @PutMapping("item/{id}")
+    @CachePut("items")
     fun updateItem(@PathVariable id: Long, @RequestBody item: ItemDto): ResponseEntity<ItemDto> {
         return ResponseEntity.status(HttpStatus.OK).body(itemService.updateItem(id, item));
     }
 
     @DeleteMapping("item/{id}")
+    @CacheEvict("items")
     fun deleteItem(@PathVariable id: Long) {
         itemService.deleteItem(id)
     }
 
     @PostMapping("item/{id}/book")
+    @CacheEvict("items")
     fun bookItem(@PathVariable id: Long): ResponseEntity<Boolean> {
         itemService.bookItem(id);
         return ResponseEntity.status(HttpStatus.OK).body(true);

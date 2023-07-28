@@ -69,6 +69,7 @@ class ItemService(private val itemRepo: ItemRepo) {
         if (item.availability == 0) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "No availability on $id")
         }
+        
         updateItem(id, item.copy(availability = item.availability - 1))
     }
 
