@@ -7,6 +7,7 @@ import hotels.accommodation.model.LocationModel
 
 
 fun ItemModel.toDto(): ItemDto = ItemDto(
+    id = id,
     name = name,
     rating = rating,
     category = category,

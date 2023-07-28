@@ -32,11 +32,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-//    compileOnly("org.projectlombok:lombok")
 //    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 //    runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("com.h2database:h2:2.2.220")
-//    annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

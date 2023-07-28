@@ -32,7 +32,7 @@ data class ItemModel(
 
     @field:Min(0) @field:Max(1000)
     val reputation: Int,
-
+    
     val reputationBadge: String,
 
     val price: Int,

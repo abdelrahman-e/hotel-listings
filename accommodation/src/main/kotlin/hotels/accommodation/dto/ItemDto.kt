@@ -1,9 +1,11 @@
 package hotels.accommodation.dto
 
 import hotels.accommodation.enums.HotelCategoryEnum
+import hotels.accommodation.enums.ReputationBadgesEnum
 
 
 data class ItemDto(
+    val id: Long?,
     val name: String,
     val rating: Int,
     val category: HotelCategoryEnum,
@@ -12,13 +14,12 @@ data class ItemDto(
     val reputation: Int,
     val price: Int,
     val availability: Int
-)
-{
+) {
     val reputationBadge: String
         get() = when {
-            reputation <= 500 -> "red"
-            reputation <= 799 -> "yellow"
-            else -> "green"
+            reputation <= 500 -> ReputationBadgesEnum.RED.value
+            reputation <= 799 -> ReputationBadgesEnum.YELLOW.value
+            else -> ReputationBadgesEnum.GREEN.value
         }
 }
 
