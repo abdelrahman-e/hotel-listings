@@ -1,7 +1,7 @@
 package hotels.accommodation.controller
 
 import hotels.accommodation.dto.ItemDto
-import hotels.accommodation.helper.toEntity
+import hotels.accommodation.model.ItemModel
 import hotels.accommodation.service.ItemService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -23,9 +23,16 @@ class ItemController(private val itemService: ItemService) {
         return ResponseEntity.status(HttpStatus.CREATED).body(itemService.createItem(item));
     }
 
+
     @GetMapping("/items")
-    fun getAllItems(): ResponseEntity<List<ItemDto>> {
-        return ResponseEntity.status(HttpStatus.OK).body(itemService.getAllItems());
+    fun getAllItems(
+        @RequestParam(required = false) rating: Int?,
+        @RequestParam(required = false) city: String?,
+        @RequestParam(required = false) reputationBadge: String?
+    ): ResponseEntity<List<ItemDto>> {
+        logger.log(Level.INFO, "Controller get all items $rating,$city,$reputationBadge")
+
+        return ResponseEntity.status(HttpStatus.OK).body(itemService.getAllItems(rating, city, reputationBadge));
     }
 
     @GetMapping("/item/{id}")
@@ -48,5 +55,6 @@ class ItemController(private val itemService: ItemService) {
         itemService.bookItem(id);
         return ResponseEntity.status(HttpStatus.OK).body(true);
     }
+
 
 }

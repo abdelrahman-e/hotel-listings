@@ -18,13 +18,6 @@ fun ItemModel.toDto(): ItemDto = ItemDto(
     availability = availability
 )
 
-fun LocationModel.toDto(): LocationDto = LocationDto(
-    city = city,
-    state = state,
-    country = country,
-    zipCode = zipCode,
-    address = address
-)
 
 fun ItemDto.toEntity(): ItemModel = ItemModel(
     name = name,
@@ -38,7 +31,16 @@ fun ItemDto.toEntity(): ItemModel = ItemModel(
     reputationBadge = reputationBadge
 )
 
-fun LocationDto.toEntity(): LocationModel = LocationModel(
+
+private fun LocationDto.toEntity(): LocationModel = LocationModel(
+    city = city,
+    state = state,
+    country = country,
+    zipCode = zipCode,
+    address = address
+)
+
+private fun LocationModel.toDto(): LocationDto = LocationDto(
     city = city,
     state = state,
     country = country,
