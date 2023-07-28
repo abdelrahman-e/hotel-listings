@@ -1,0 +1,160 @@
+openapi: 3.0.0
+info:
+  title: Item API
+  version: 1.0.0
+paths:
+  /api/item:
+    post:
+      summary: Create a new item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemDto'
+      responses:
+        '201':
+          description: Item created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemDto'
+  /api/items:
+    get:
+      summary: Get all items
+      parameters:
+        - name: rating
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: city
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: reputationBadge
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemDto'
+  '/api/item/{id}':
+    get:
+      summary: Get an item by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: The requested item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemDto'
+    put:
+      summary: Update an item by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemDto'
+      responses:
+        '200':
+          description: The updated item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemDto'
+    delete:
+      summary: Delete an item by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Item deleted successfully
+  '/api/item/{id}/book':
+    post:
+      summary: Book an item by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Item booked successfully
+          content:
+            application/json:
+              schema:
+                type: boolean
+components:
+  schemas:
+    LocationDto:
+      type: object
+      properties:
+        id:
+          type: integer
+        city:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        zipCode:
+          type: integer
+        address:
+          type: string
+    ItemDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          nullable: true
+        name:
+          type: string
+        rating:
+          type: integer
+        category:
+          type: string
+          enum:
+            - HOTEL
+            - ALTERNATIVE
+            - HOSTEL
+            - LODGE
+            - RESORT
+            - GUEST_HOUSE
+        location:
+          $ref: '#/components/schemas/LocationDto'
+        image:
+          type: string
+          format: uri
+        reputation:
+          type: integer
+        price:
+          type: integer
+        availability:
+          type: integer
