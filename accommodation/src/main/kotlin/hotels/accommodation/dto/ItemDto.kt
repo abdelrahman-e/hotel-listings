@@ -21,5 +21,6 @@ data class ItemDto(
             reputation <= 799 -> ReputationBadgesEnum.YELLOW.value
             else -> ReputationBadgesEnum.GREEN.value
         }
+    
 }
 

@@ -21,7 +21,7 @@ class ItemService(private val itemRepo: ItemRepo) {
             val item = itemDto.toEntity()
             return itemRepo.save(item).toDto()
         } catch (e: TransactionSystemException) {
-            val msg = e.mostSpecificCause.message ?: e?.cause?.cause?.message
+            val msg = e.mostSpecificCause.message ?: e.cause?.cause?.message
 
             logger.log(Level.WARNING, msg);
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, msg)
@@ -38,7 +38,7 @@ class ItemService(private val itemRepo: ItemRepo) {
         try {
             return itemRepo.save(itemModel).toDto()
         } catch (e: TransactionSystemException) {
-            val msg = e.mostSpecificCause.message ?: e?.cause?.cause?.message
+            val msg = e.mostSpecificCause.message ?: e.cause?.cause?.message
 
             logger.log(Level.WARNING, msg);
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, msg)
@@ -64,13 +64,14 @@ class ItemService(private val itemRepo: ItemRepo) {
         itemRepo.deleteById(id)
     }
 
-    fun bookItem(id: Long) {
+    fun bookItem(id: Long): Boolean {
         val item = getItem(id)
         if (item.availability == 0) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "No availability on $id")
         }
-        
+
         updateItem(id, item.copy(availability = item.availability - 1))
+        return true
     }
 
 }
