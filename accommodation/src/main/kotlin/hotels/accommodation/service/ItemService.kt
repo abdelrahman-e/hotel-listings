@@ -50,8 +50,8 @@ class ItemService(private val itemRepo: ItemRepo) {
     }
 
     /*
-       Send itemModel and city due to the Example.of only working on Singular types,
-        so Location needs to be constructed manually
+       Send ItemModel and LocationModel due to the Example.of only working on Singular types,
+        so LocationModel needs to be sent separately
      */
     fun getAllItems(itemModel: ItemModel?, locationModel: LocationModel?): List<ItemDto> {
         val item = when {
