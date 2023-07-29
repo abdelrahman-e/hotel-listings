@@ -9,7 +9,7 @@ data class ItemDto(
     val name: String,
     val rating: Int,
     val category: HotelCategoryEnum,
-    val location: LocationDto,
+    val location: LocationDto?,
     val image: String,
     val reputation: Int,
     val price: Int,

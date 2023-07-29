@@ -2,6 +2,7 @@ package hotels.accommodation.controller
 
 import hotels.accommodation.dto.ItemDto
 import hotels.accommodation.model.ItemModel
+import hotels.accommodation.model.LocationModel
 import hotels.accommodation.service.ItemService
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.CachePut
@@ -30,13 +31,11 @@ class ItemController(private val itemService: ItemService) {
     @GetMapping("/items")
     @CachePut("items")
     fun getAllItems(
-        @RequestParam(required = false) rating: Int?,
-        @RequestParam(required = false) city: String?,
-        @RequestParam(required = false) reputationBadge: String?
+        item: ItemModel?, location: LocationModel?
     ): ResponseEntity<List<ItemDto>> {
-        logger.log(Level.INFO, "Controller get all items $rating,$city,$reputationBadge")
+        logger.log(Level.INFO, "Controller get all items $item")
 
-        return ResponseEntity.status(HttpStatus.OK).body(itemService.getAllItems(rating, city, reputationBadge));
+        return ResponseEntity.status(HttpStatus.OK).body(itemService.getAllItems(item, location));
     }
 
     @GetMapping("/item/{id}")
@@ -53,8 +52,9 @@ class ItemController(private val itemService: ItemService) {
 
     @DeleteMapping("item/{id}")
     @CacheEvict("items")
-    fun deleteItem(@PathVariable id: Long) {
+    fun deleteItem(@PathVariable id: Long): ResponseEntity<Boolean> {
         itemService.deleteItem(id)
+        return ResponseEntity.status(HttpStatus.OK).body(true);
     }
 
     @PostMapping("item/{id}/book")

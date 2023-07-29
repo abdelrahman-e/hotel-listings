@@ -1,7 +1,6 @@
 FROM gradle:8.2.1-jdk17-alpine AS build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-VOLUME /home/gradle/.gradle
 RUN gradle bootJar --no-daemon
 
 FROM openjdk:17-jdk-alpine

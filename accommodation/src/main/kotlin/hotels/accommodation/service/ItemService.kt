@@ -3,7 +3,10 @@ package hotels.accommodation.service
 import hotels.accommodation.dto.ItemDto
 import hotels.accommodation.helper.toDto
 import hotels.accommodation.helper.toEntity
+import hotels.accommodation.model.ItemModel
+import hotels.accommodation.model.LocationModel
 import hotels.accommodation.repo.ItemRepo
+import org.springframework.data.domain.Example
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.TransactionSystemException
@@ -34,7 +37,7 @@ class ItemService(private val itemRepo: ItemRepo) {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found $id $itemDto")
         }
 
-        val itemModel = itemDto.toEntity().copy(id = id)
+        val itemModel = itemDto.toEntity(id)
         try {
             return itemRepo.save(itemModel).toDto()
         } catch (e: TransactionSystemException) {
@@ -46,22 +49,35 @@ class ItemService(private val itemRepo: ItemRepo) {
 
     }
 
-    fun getAllItems(rating: Int?, city: String?, reputationBadge: String?): List<ItemDto> {
-        if (rating == null && city == null && reputationBadge == null) {
-            return itemRepo.findAll().map { it.toDto() }
+    /*
+       Send itemModel and city due to the Example.of only working on Singular types,
+        so Location needs to be constructed manually
+     */
+    fun getAllItems(itemModel: ItemModel?, locationModel: LocationModel?): List<ItemDto> {
+        val item = when {
+            itemModel == null && locationModel == null -> {
+                logger.log(Level.INFO, "Returning all items")
+                return itemRepo.findAll().map { it.toDto() }
+            }
+
+            else -> {
+                ItemModel(itemModel, locationModel)
+            }
         }
-        return itemRepo.findByRatingOrLocationCityOrReputationBadge(rating, city, reputationBadge).map { it.toDto() };
+        logger.log(Level.INFO, "finding by filter $item")
+        return itemRepo.findAll(Example.of(item)).map { it.toDto() }
     }
 
     fun getItem(id: Long): ItemDto = itemRepo.findById(id)
         .map { it.toDto() }
         .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found $id") }
 
-    fun deleteItem(id: Long) {
+    fun deleteItem(id: Long): Boolean {
         if (!itemRepo.existsById(id)) {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found $id")
         }
         itemRepo.deleteById(id)
+        return true
     }
 
     fun bookItem(id: Long): Boolean {
