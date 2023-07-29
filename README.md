@@ -3,10 +3,11 @@
 ## General Info and Assumptions
 
 * Added caching using springboot caching manager
-* The getAllItems Api has the filter which returns items that match any of the sent queryParams, if no queryParams are sent, all items are returned
 * Tested on WSL and on Windows 11 (docker-compose --build)
 * The api spec location is at `resources/schema`. There's also a postman collection json that can be imported for ease of
   use
+* For the filtering, added `Example.of` for `jpa query by` to make it dynamic on the `getAllItems Api` regardless of which fields are sent. For this the model class had to be nullable inorder to ignore non existant fields,
+given kotlin nature this might be bad practice so maybe specifications can be used instead
 
 ## Usage
 

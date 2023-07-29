@@ -9,16 +9,16 @@ import jakarta.validation.constraints.Digits
 @Entity
 data class LocationModel(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
+    val id: Long?=null,
 
-    val city: String,
+    val city: String?=null,
 
-    val state: String,
+    val state: String?=null,
 
-    val country: String,
+    val country: String?=null,
 
     @field:Digits(integer = 5, fraction = 0)
-    val zipCode: Int,
+    val zipCode: Int?=null,
 
-    val address: String
+    val address: String?=null
 )

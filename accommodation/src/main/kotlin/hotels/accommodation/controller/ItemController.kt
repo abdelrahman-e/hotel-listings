@@ -30,13 +30,11 @@ class ItemController(private val itemService: ItemService) {
     @GetMapping("/items")
     @CachePut("items")
     fun getAllItems(
-        @RequestParam(required = false) rating: Int?,
-        @RequestParam(required = false) city: String?,
-        @RequestParam(required = false) reputationBadge: String?
+        item:ItemModel
     ): ResponseEntity<List<ItemDto>> {
-        logger.log(Level.INFO, "Controller get all items $rating,$city,$reputationBadge")
+        logger.log(Level.INFO, "Controller get all items $item")
 
-        return ResponseEntity.status(HttpStatus.OK).body(itemService.getAllItems(rating, city, reputationBadge));
+        return ResponseEntity.status(HttpStatus.OK).body(itemService.getAllItems(item));
     }
 
     @GetMapping("/item/{id}")
