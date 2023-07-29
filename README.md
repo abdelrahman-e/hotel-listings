@@ -10,5 +10,5 @@
 
 ## Usage
 
-* Use command `docker-compose --build` to build and run the app
+* Go into accomodation directory and use command `docker-compose --build` to build and run the app
 * The app uses a volume to cache gradle build to save time for consecutive runs
