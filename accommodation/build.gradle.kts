@@ -10,7 +10,7 @@ plugins {
 
 
 group = "hotels"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -32,9 +32,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-//    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
-//    runtimeOnly("org.postgresql:postgresql")
-    runtimeOnly("com.h2database:h2:2.2.220")
+    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+    runtimeOnly("org.postgresql:postgresql")
+//    runtimeOnly("com.h2database:h2:2.2.220")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
