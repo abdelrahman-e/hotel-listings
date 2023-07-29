@@ -5,7 +5,7 @@
 * Added caching using springboot caching manager
 * The Filter returns items that match any of the sent queryParams, if no queryParams are sent, all items are returned
 * Tested on WSL and on Windows 11 (docker-compose --build)
-* The api spec location is at `resources/schema`. There's also postman collection json that can be imported for ease of
+* The api spec location is at `resources/schema`. There's also a postman collection json that can be imported for ease of
   use
 
 ## Usage
