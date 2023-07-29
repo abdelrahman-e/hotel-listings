@@ -6,9 +6,4 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ItemRepo : JpaRepository<ItemModel, Long> {
-    fun findByRatingOrLocationCityOrReputationBadge(
-        rating: Int?,
-        city: String?,
-        reputationBadge: String?
-    ): List<ItemModel>
 }

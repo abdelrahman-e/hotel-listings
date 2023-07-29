@@ -32,6 +32,19 @@ fun ItemDto.toEntity(): ItemModel = ItemModel(
     reputationBadge = reputationBadge
 )
 
+fun ItemDto.toEntity(id:Long): ItemModel = ItemModel(
+    id=id,
+    name = name,
+    rating = rating,
+    category = category,
+    location = location?.toEntity(),
+    image = image,
+    reputation = reputation,
+    price = price,
+    availability = availability,
+    reputationBadge = reputationBadge
+)
+
 
 private fun LocationDto.toEntity(): LocationModel = LocationModel(
     city = city,

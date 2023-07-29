@@ -20,8 +20,6 @@ services:
       - SPRING_DATASOURCE_USERNAME=myuser
       - SPRING_DATASOURCE_PASSWORD=mypassword
       - SPRING_JPA_DATABASE-PLATFORM=org.hibernate.dialect.PostgreSQLDialect
-    volumes:
-      - gradle-cache:/home/gradle/.gradle
     depends_on:
       - db
 
