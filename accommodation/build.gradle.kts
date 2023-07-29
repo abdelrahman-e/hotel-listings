@@ -34,7 +34,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
     runtimeOnly("org.postgresql:postgresql")
-//    runtimeOnly("com.h2database:h2:2.2.220")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
