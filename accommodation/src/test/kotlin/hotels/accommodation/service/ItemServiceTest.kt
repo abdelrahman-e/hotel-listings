@@ -1,17 +1,23 @@
 package hotels.accommodation.service
 
-import hotels.accommodation.enums.ReputationBadgesEnum
 import hotels.accommodation.fixture.Fixtures
+import hotels.accommodation.helper.toDto
 import hotels.accommodation.helper.toEntity
+import hotels.accommodation.model.ItemModel
+import hotels.accommodation.model.LocationModel
 import hotels.accommodation.repo.ItemRepo
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.ArgumentMatchers
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito.any
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.data.domain.Example
 import org.springframework.http.HttpStatus
 import org.springframework.transaction.TransactionSystemException
 import org.springframework.web.server.ResponseStatusException
@@ -38,8 +44,7 @@ class ItemServiceTest {
         val dto = fixtures.itemDtoFixture
         val entity = fixtures.itemModelFixture
 
-        `when`(itemRepo.save(dto.toEntity())).thenReturn(entity)
-
+        `when`(itemRepo.save(any())).thenReturn(entity)
 
         val result = itemService.createItem(dto)
         assert(result == dto)
@@ -50,7 +55,7 @@ class ItemServiceTest {
         val dto = fixtures.itemDtoFixture
 
         val exception = TransactionSystemException("Test Exception")
-        `when`(itemRepo.save(dto.toEntity())).thenThrow(exception)
+        `when`(itemRepo.save(any())).thenThrow(exception)
 
         val ex = assertThrows<ResponseStatusException> {
             itemService.createItem(dto)
@@ -62,10 +67,10 @@ class ItemServiceTest {
     fun `update item success`() {
         val id = 1L
         val dto = fixtures.itemDtoFixture.copy(name = "Updated Hotel")
-        val entity = fixtures.itemModelFixture.copy(name = "Updated Hotel")
+        val entity = fixtures.itemModelFixture.toDto().copy(name = "Updated Hotel").toEntity(id)
 
         `when`(itemRepo.existsById(id)).thenReturn(true)
-        `when`(itemRepo.save(entity)).thenReturn(entity)
+        `when`(itemRepo.save(any())).thenReturn(entity)
 
         val result = itemService.updateItem(id, dto)
         assert(result == dto)
@@ -88,10 +93,9 @@ class ItemServiceTest {
     @Test
     fun `update item with generalException`() {
         val dto = fixtures.itemDtoFixture.copy(name = "Updated Hotel")
-        val entity = fixtures.itemModelFixture.copy(name = "Updated Hotel")
         val id = 1L
         val exception = TransactionSystemException("Test Exception")
-        `when`(itemRepo.save(entity)).thenThrow(exception)
+        `when`(itemRepo.save(any())).thenThrow(exception)
         `when`(itemRepo.existsById(id)).thenReturn(true)
 
         val ex = assertThrows<ResponseStatusException> {
@@ -101,29 +105,47 @@ class ItemServiceTest {
     }
 
     @Test
-    fun `get all items`() {
-        val entities = listOf(fixtures.itemModelFixture)
-        val dtos = listOf(fixtures.itemDtoFixture)
+    fun `test getAllItems with null itemModel and city`() {
+        val items = listOf(fixtures.itemModelFixture)
+        `when`(itemRepo.findAll()).thenReturn(items)
 
-        `when`(itemRepo.findAll()).thenReturn(entities)
+        val result = itemService.getAllItems(null, null)
 
-        val result = itemService.getAllItems(null, null, null)
-        assert(result == dtos)
+        assertEquals(1, result.size)
+        assertEquals(fixtures.itemDtoFixture, result[0])
     }
 
     @Test
-    fun `get all items with filters`() {
-        val rating = 5
-        val city = "city"
-        val reputationBadge = ReputationBadgesEnum.GREEN.value
+    fun `test getAllItems with null itemModel and non-null city`() {
+        val items = listOf(fixtures.itemModelFixture)
+        `when`(itemRepo.findAll(any<Example<ItemModel>>())).thenReturn(items)
 
-        val entities = listOf(fixtures.itemModelFixture)
-        val dtos = listOf(fixtures.itemDtoFixture)
+        val result = itemService.getAllItems(null, LocationModel(city = "city"))
 
-        `when`(itemRepo.findByRatingOrLocationCityOrReputationBadge(rating, city, reputationBadge)).thenReturn(entities)
+        assertEquals(1, result.size)
+        assertEquals(fixtures.itemDtoFixture, result[0])
+    }
 
-        val result = itemService.getAllItems(rating, city, reputationBadge)
-        assert(result == dtos)
+    @Test
+    fun `test getAllItems with non-null itemModel and non-null city`() {
+        val items = listOf(fixtures.itemModelFixture)
+        `when`(itemRepo.findAll(any<Example<ItemModel>>())).thenReturn(items)
+
+        val result = itemService.getAllItems(fixtures.itemModelFixture, LocationModel(city = "city"))
+
+        assertEquals(1, result.size)
+        assertEquals(fixtures.itemDtoFixture.id, result[0].id)
+    }
+
+    @Test
+    fun `test getAllItems with non-null itemModel and null city`() {
+        val items = listOf(fixtures.itemModelFixture)
+        `when`(itemRepo.findAll(any<Example<ItemModel>>())).thenReturn(items)
+
+        val result = itemService.getAllItems(fixtures.itemModelFixture, null)
+
+        assertEquals(1, result.size)
+        assertEquals(fixtures.itemDtoFixture, result[0])
     }
 
 
@@ -164,23 +186,19 @@ class ItemServiceTest {
     @Test
     fun `book item`() {
         val id = 1L
-        val entity = fixtures.itemModelFixture.copy(availability = 9)
-        val dto = fixtures.itemDtoFixture.copy(availability = 9)
+        val entity = fixtures.itemModelFixture.toDto().copy(availability = 9).toEntity()
 
         `when`(itemRepo.findById(id)).thenReturn(Optional.of(fixtures.itemModelFixture))
-        `when`(itemRepo.save(entity)).thenReturn(entity)
+        `when`(itemRepo.save(any())).thenReturn(entity)
         `when`(itemRepo.existsById(id)).thenReturn(true)
 
-
-        // no return value to verify for this method
         assert(itemService.bookItem(id)).equals(true)
     }
 
     @Test
     fun `book item with no availability`() {
         val id = 1L
-        val dto = fixtures.itemDtoFixture.copy(availability = 0)
-        val entity = fixtures.itemModelFixture.copy(availability = 0)
+        val entity = fixtures.itemModelFixture.toDto().copy(availability = 0).toEntity()
 
         `when`(itemRepo.findById(id)).thenReturn(Optional.of(entity))
 

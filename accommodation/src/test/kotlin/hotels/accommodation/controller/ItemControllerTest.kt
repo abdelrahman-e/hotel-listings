@@ -3,6 +3,7 @@ package hotels.accommodation.controller
 import hotels.accommodation.dto.ItemDto
 import hotels.accommodation.dto.LocationDto
 import hotels.accommodation.fixture.Fixtures
+import hotels.accommodation.model.ItemModel
 import hotels.accommodation.service.ItemService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -47,9 +48,9 @@ class ItemControllerTest {
     @Test
     fun `get all items`() {
         val items = listOf(item)
-        `when`(itemService.getAllItems(null, null, null)).thenReturn(items)
+        `when`(itemService.getAllItems(null, null)).thenReturn(items)
 
-        val response = itemController.getAllItems(null, null, null)
+        val response = itemController.getAllItems(null, null)
         assert(response.statusCode == HttpStatus.OK)
         assert(response.body == items)
     }
