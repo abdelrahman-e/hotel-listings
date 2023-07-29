@@ -2,7 +2,7 @@
 
 ## General Info and Assumptions
 
-* This uses Kotlin with springboot and builds with gradle kotlin
+* This uses Kotlin with springboot and builds with gradle kotlin in docker compose, the db used is postgres
 * Added caching using springboot caching manager
 * Tested on WSL and on Windows 11 (docker-compose --build)
 * The api spec location is at `resources/schema`. There's also a postman collection json that can be imported for ease
