@@ -1,0 +1,16 @@
+{
+  "name": "Example name",
+  "rating": 5,
+  "category": "HOTEL",
+  "location": {
+    "city": "Cuernavaca",
+    "state": "Morelos",
+    "country": "Mexico",
+    "zip_code": "62448",
+    "address": "address"
+  },
+  "image": "https://www.example.com/path/to/image.jpg",
+  "reputation": 900,
+  "price": 1000,
+  "availability": 10
+}
